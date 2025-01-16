@@ -12,6 +12,10 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
   EC2IvanUbuntu22:
     Type: AWS::EC2::Instance
     Properties:
@@ -20,7 +24,6 @@ Resources:
       KeyName: vockey
       SecurityGroups:
         - !Ref SGSHHIVAN
-
-    
+ 
 
         
