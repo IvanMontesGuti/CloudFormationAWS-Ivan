@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Plantilla Basica EC2 con grupo de seguridad
+
+Resources:
+  SGSHHIVAN: 
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      GroupName: SSHAccessbnv-ivan
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+  EC2IvanUbuntu22:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-005fc0f236362e99f
+      InstanceType: t2.small
+      KeyName: vockey
+      SecurityGroups:
+        - !Ref SGSHHIVAN
+
+    
+
+        
