@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Plantilla con grupo de seguridad
+
+Resources:
+  SSHTCP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Grupo de seguridad con puertos abiertos para SSH y HTTP.
+      SecurityGroupIngress:
+        - ToPort: 22
+          FromPort: 22
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+        - ToPort: 80
+          FromPort: 80
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+        - ToPort: 8080
+          FromPort: 8080
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+        - ToPort: 443
+          FromPort: 443
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  SSHSECURITYGROUP:
+    Description: Id grupo de seguridad para SSH
+    Value: !Ref SSHTCP
+    Export:
+      Name: !Sub "${AWS::StackName}-SSHSecurityGroup"
