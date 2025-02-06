@@ -20,7 +20,7 @@ Resources:
       InstanceType: !Ref InstanceTypeParameter
       ImageId: !Ref LatestAmiId
       SecurityGroups:
-        - !Ref SSHTCP
+        - !ImportValue SecurityGroups-SSHSecurityGroup
       UserData: 
         Fn::Base64: 
           !Sub |
@@ -81,35 +81,14 @@ Resources:
             cp build/libs/studentify-1.0.0.war  /opt/tomcat/webapps/studentify.war
             systemctl restart tomcat
 
-  SSHTCP:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Grupo de seguridad con puertos abiertos para SSH y HTTP.
-      SecurityGroupIngress:
-        - ToPort: 22
-          FromPort: 22
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - ToPort: 80
-          FromPort: 80
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - ToPort: 8080
-          FromPort: 8080
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - ToPort: 443
-          FromPort: 443
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
+            /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Tomcat --region ${AWS::Region}
+
 
 Outputs:
   PrivateIP:
     Description: "IP Privada de la instancia EC2"
-    Value:
-      Fn::Sub:
-        - "http://${PUBLICDNS}:8080/studentify/api/health"
-        - PrivateIp 
+    Value: !GetAtt TomcatInstance.PrivateIp
+
   HealthEndpoint:
     Description: "URL del endpoint de Health"
     Value: !Sub "http://${TomcatInstance.PrivateIp}:8080/api/health"
